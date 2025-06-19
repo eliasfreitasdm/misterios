@@ -1,0 +1,159 @@
+/* Animações para o jogo */
+
+/* Animação de flutuação para itens colecionáveis */
+@keyframes float {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Animação de pulso para saída de nível */
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 0 0 30px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+  }
+}
+
+/* Animação de dano para o jogador */
+@keyframes damage {
+  0% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Animação de coleta de item */
+@keyframes collect {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(0);
+    opacity: 0;
+  }
+}
+
+/* Animação de movimento para inimigos */
+@keyframes enemyMove {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(50px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+/* Animação de vitória */
+@keyframes victory {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  50% {
+    transform: scale(1.2) rotate(-5deg);
+  }
+  75% {
+    transform: scale(1.2) rotate(5deg);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Classes de animação para o jogador */
+.player-idle {
+  animation: float 2s infinite ease-in-out;
+}
+
+.player-run {
+  animation: playerRun 0.5s infinite steps(8);
+}
+
+.player-jump {
+  animation: playerJump 0.5s ease-out;
+}
+
+.player-damage {
+  animation: damage 0.5s;
+}
+
+/* Animação para inimigos */
+.enemy {
+  animation: enemyMove 4s infinite ease-in-out;
+}
+
+/* Animação para itens colecionáveis */
+.collectable-item {
+  animation: float 2s infinite ease-in-out;
+}
+
+/* Animação para a saída do nível */
+.level-exit {
+  animation: pulse 2s infinite ease-in-out;
+}
+
+/* Animação para coleta de item */
+.item-collected {
+  animation: collect 0.5s forwards;
+}
+
+/* Estilos para botões de troca de personagem */
+.character-button {
+  transition: all 0.3s ease;
+}
+
+.character-button:hover {
+  transform: scale(1.1);
+}
+
+.character-button.active {
+  transform: scale(1.2);
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+}
+
+
+/* Animações para portal */
+@keyframes portalPulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 30px rgba(138,43,226,0.8);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 40px rgba(138,43,226,1);
+  }
+}
+
