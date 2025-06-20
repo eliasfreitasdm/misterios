@@ -118,7 +118,7 @@ export default function Inventory({
                   <h3 className="font-bold text-gray-800">{item.name}</h3>
                 </div>
                 <p className="text-sm text-gray-600 mb-2">{item.description}</p>
-                <div className="text-xs text-blue-600 font-semibold">+{item.points} pontos de conhecimento</div>
+                <div className="text-xs text-blue-600 font-semibold">+{item.points || 0} pontos de conhecimento</div>
               </div>
             ))}
           </div>
@@ -144,7 +144,7 @@ export default function Inventory({
                      selectedItem.type === 'relic' ? 'Relíquia' : 'Item'}
                   </div>
                   <div className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-0.5 rounded">
-                    +{selectedItem.points} conhecimento
+                    +{selectedItem.points || 0} conhecimento
                   </div>
                   {selectedItem.era && (
                     <div className="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-0.5 rounded">
@@ -169,7 +169,7 @@ export default function Inventory({
         {/* Estatísticas do inventário */}
         <div className="mt-6 flex justify-between text-sm text-gray-500">
           <div>Total de itens: {items.length}</div>
-          <div>Pontos de conhecimento: {items.reduce((total, item) => total + item.points, 0)}</div>
+          <div>Pontos de conhecimento: {items.reduce((total, item) => total + (item.points || 0), 0)}</div>
         </div>
       </div>
     </div>

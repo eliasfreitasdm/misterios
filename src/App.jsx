@@ -1,21 +1,13 @@
 import { useState, useEffect } from 'react'
 import './App.css'
-import Player from './components/Player'
-import Platform from './components/Platform'
-import GameLevel from './components/GameLevel'
-import ItemManager from './components/ItemManager'
-import Inventory from './components/Inventory'
-import EnemyManager from './components/EnemyManager'
-import ChallengeManager from './components/ChallengeManager'
-import GameHUD from './components/GameHUD'
-import Cutscene from './components/Cutscene'
-import HistoricalInterlude from './components/HistoricalInterlude'
-import NarrativeConclusion from './components/NarrativeConclusion'
 import MainMenu from './components/MainMenu'
 import GameIntro from './components/GameIntro'
 import VictoryScreen from './components/VictoryScreen'
 import DialogueBox from './components/DialogueBox'
 import HistoricalPuzzle from './components/HistoricalPuzzle'
+import GameLevel from './components/GameLevel'
+import GameHUD from './components/GameHUD'
+import Inventory from './components/Inventory'
 import './components/GameAnimations.css'
 
 // Importar assets dos personagens
@@ -29,6 +21,34 @@ import fazenda1830 from './assets/cenarios/fazenda-1830.png'
 import vila1900 from './assets/cenarios/vila-1900.png'
 import capital1940 from './assets/cenarios/capital-1940.png'
 import boaVistaModerna from './assets/cenarios/boa-vista-moderna.png'
+
+// Personagens do jogo
+const CHARACTERS = [
+  {
+    id: 'ana',
+    name: 'Ana',
+    image: anaImg,
+    description: 'Uma jovem curiosa e inteligente que adora história'
+  },
+  {
+    id: 'lucas', 
+    name: 'Lucas',
+    image: lucasImg,
+    description: 'Um garoto aventureiro que gosta de explorar'
+  },
+  {
+    id: 'sofia',
+    name: 'Sofia',
+    image: sofiaImg,
+    description: 'Uma menina corajosa que resolve problemas'
+  },
+  {
+    id: 'ze',
+    name: 'Zé Papagaio',
+    image: zeImg,
+    description: 'O papagaio sábio que conhece todos os segredos de Roraima'
+  }
+]
 
 // Estados do jogo
 const GAME_STATES = {
@@ -66,11 +86,29 @@ const ERAS = {
       { x: 1500, y: 350, width: 200, height: 20, type: 'wood' },
       { x: 1800, y: 300, width: 200, height: 20, type: 'wood' },
     ],
-    // Itens colecionáveis
+    // Itens colecionáveis com explicações educativas detalhadas
     items: [
-      { x: 350, y: 400, type: 'artifact', name: 'Ferradura Antiga', description: 'Uma ferradura usada nos cavalos da fazenda original.', points: 10, collected: false },
-      { x: 700, y: 350, type: 'document', name: 'Escritura da Fazenda', description: 'Documento original da fundação da Fazenda Boa Vista.', points: 15, collected: false },
-      { x: 1300, y: 350, type: 'artifact', name: 'Lamparina', description: 'Lamparina a óleo usada pelos primeiros habitantes.', points: 10, collected: false },
+      { 
+        x: 380, y: 420, type: 'lamp', name: 'Lamparina Antiga', 
+        description: 'Lamparina a óleo usada pelos primeiros habitantes da fazenda.',
+        educationalText: 'Esta lamparina representa a vida simples dos primeiros colonos. Sem energia elétrica, eles dependiam de lamparinas a óleo de mamona ou querosene para iluminar suas casas durante a noite. Era um item essencial para a sobrevivência na fronteira.',
+        historicalContext: 'Em 1830, Boa Vista era apenas uma fazenda isolada. Os habitantes viviam de forma muito simples, criando gado e plantando para subsistência.',
+        points: 15, collected: false 
+      },
+      { 
+        x: 720, y: 370, type: 'document', name: 'Escritura da Fazenda', 
+        description: 'Documento original da fundação da Fazenda Boa Vista.',
+        educationalText: 'Este documento marca o início oficial de Boa Vista. A fazenda foi estabelecida por Inácio Lopes de Magalhães, que recebeu uma sesmaria (concessão de terra) da Coroa Portuguesa para criar gado na região.',
+        historicalContext: 'As sesmarias eram a forma como Portugal distribuía terras no Brasil colonial. Esta fazenda se tornaria o núcleo da futura capital de Roraima.',
+        points: 25, collected: false 
+      },
+      { 
+        x: 1300, y: 350, type: 'artifact', name: 'Ferradura Antiga', 
+        description: 'Ferradura usada nos cavalos da fazenda original.',
+        educationalText: 'Os cavalos eram fundamentais para o transporte e trabalho na fazenda. Esta ferradura mostra como os colonos cuidavam de seus animais, essenciais para a sobrevivência na região isolada do extremo norte do Brasil.',
+        historicalContext: 'O gado e os cavalos eram a base da economia local. A pecuária foi a primeira atividade econômica importante da região que hoje é Boa Vista.',
+        points: 20, collected: false 
+      },
     ],
     // Inimigos
     enemies: [
@@ -188,7 +226,7 @@ const ERAS = {
 // Componente Principal da Aplicação
 function App() {
   const [gameState, setGameState] = useState(GAME_STATES.MENU)
-
+  const [currentCharacterIndex, setCurrentCharacterIndex] = useState(0)
   const [currentEraIndex, setCurrentEraIndex] = useState(0)
   const [progress, setProgress] = useState(0)
   const [knowledge, setKnowledge] = useState(0)
@@ -237,6 +275,36 @@ function App() {
     }
   }, [gameState, energy]);
   
+  // Sistema de controles globais para troca de personagens
+  useEffect(() => {
+    const handleGlobalKeyDown = (e) => {
+      if (gameState === GAME_STATES.PLAYING) {
+        switch (e.key) {
+          case '1':
+            setCurrentCharacterIndex(0); // Ana
+            break;
+          case '2':
+            setCurrentCharacterIndex(1); // Lucas
+            break;
+          case '3':
+            setCurrentCharacterIndex(2); // Sofia
+            break;
+          case '4':
+            setCurrentCharacterIndex(3); // Zé Papagaio
+            break;
+          default:
+            break;
+        }
+      }
+    };
+    
+    document.addEventListener('keydown', handleGlobalKeyDown);
+    
+    return () => {
+      document.removeEventListener('keydown', handleGlobalKeyDown);
+    };
+  }, [gameState]);
+  
   const handleStartGame = () => {
     setGameState(GAME_STATES.INTRO)
   }
@@ -270,11 +338,54 @@ function App() {
   }
   
   const handleItemCollect = (index, item) => {
+    console.log('🔍 App.handleItemCollect chamado:', { index, item: item.name, currentEraId: currentEra.id });
+    
     const itemId = `${currentEra.id}-${index}`
+    console.log('🔍 App verificando itemId:', { itemId, collectedItems });
+    
     if (!collectedItems.includes(itemId)) {
-      setCollectedItems(prev => [...prev, itemId])
-      setInventory(prev => [...prev, item])
-      setKnowledge(prev => prev + 5) // Ganhar pontos por coletar itens
+      console.log('✅ App: Item não foi coletado antes, coletando agora!');
+      
+      setCollectedItems(prev => {
+        const newCollected = [...prev, itemId];
+        console.log('🔍 App: Atualizando collectedItems:', newCollected);
+        return newCollected;
+      });
+      
+      setInventory(prev => {
+        const newInventory = [...prev, item];
+        console.log('🔍 App: Atualizando inventory:', newInventory);
+        return newInventory;
+      });
+      
+      setKnowledge(prev => {
+        const newKnowledge = prev + (item.points || 15);
+        console.log('🔍 App: Atualizando knowledge:', newKnowledge);
+        return newKnowledge;
+      });
+      
+      // Mostrar explicação educativa detalhada
+      const educationalPopup = `
+🎉 ITEM HISTÓRICO DESCOBERTO! 🎉
+
+📜 ${item.name}
+
+📖 O QUE É:
+${item.description}
+
+🎓 IMPORTÂNCIA HISTÓRICA:
+${item.educationalText}
+
+🏛️ CONTEXTO DA ÉPOCA:
+${item.historicalContext}
+
+💎 Conhecimento adquirido: +${item.points || 15} pontos!
+📦 Item adicionado ao inventário!
+      `.trim()
+      
+      alert(educationalPopup)
+    } else {
+      console.log('❌ App: Item já foi coletado antes:', itemId);
     }
   }
   
@@ -345,6 +456,10 @@ function App() {
       
       <GameLevel
         era={currentEra}
+        backgroundImage={currentEra.background}
+        platforms={currentEra.platforms}
+        items={currentEra.items}
+        enemies={currentEra.enemies}
         character={CHARACTERS[currentCharacterIndex]}
         onCharacterChange={setCurrentCharacterIndex}
         onProgressChange={setProgress}
@@ -354,9 +469,44 @@ function App() {
         onUseItem={handleUseItem}
         onItemCollect={handleItemCollect}
         collectedItems={collectedItems}
+        currentEraId={currentEra.id}
         onEnemyContact={handleEnemyContact}
         onExitReached={handleExitReached}
+        onInventoryToggle={() => setShowInventory(!showInventory)}
       />
+      
+      {/* BOTÃO DE PORTAL SEMPRE VISÍVEL */}
+      <button 
+        onClick={() => {
+          console.log('Portal clicado - avançando para próxima era!');
+          handleNextEra();
+        }}
+        style={{
+          position: 'fixed',
+          right: '20px',
+          bottom: '20px',
+          width: '120px',
+          height: '120px',
+          backgroundColor: '#9C27B0',
+          color: 'white',
+          border: '4px solid #FFD700',
+          borderRadius: '50%',
+          cursor: 'pointer',
+          fontSize: '16px',
+          fontWeight: 'bold',
+          zIndex: 1000,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          boxShadow: '0 0 30px rgba(156, 39, 176, 0.8)',
+          animation: 'portalPulse 2s infinite ease-in-out'
+        }}
+      >
+        <div style={{ fontSize: '40px', marginBottom: '5px' }}>🌀</div>
+        <div style={{ fontSize: '12px' }}>PORTAL</div>
+        <div style={{ fontSize: '10px' }}>Próxima Era</div>
+      </button>
       
       {showInventory && (
         <Inventory
